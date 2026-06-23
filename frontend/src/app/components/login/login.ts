@@ -22,7 +22,7 @@ export class Login {
 
   form = this.fb.group({
     identificador: ['', [Validators.required]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
   get identificador() {
@@ -33,6 +33,11 @@ export class Login {
   }
 
   async onSubmit(): Promise<void> {
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     this.loading.set(true);
     this.errorMsg.set('');
 
@@ -44,7 +49,7 @@ export class Login {
           password: password!,
         }),
       );
-      // El service guardó el token y actualizó el signal → navegar al publicaciones que va ser mi "home"
+      // El service guardó el token y actualizó el signal → navegar a publicaciones que va ser mi "home"
       this.router.navigate(['/publicaciones']);
     } catch (err: any) {
       console.error(err);

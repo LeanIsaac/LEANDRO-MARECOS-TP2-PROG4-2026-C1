@@ -26,14 +26,25 @@
     </h2>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="space-y-5">
+      @if (errorMsg()) {
+      <div class="bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-xl text-left">
+        {{ errorMsg() }}
+      </div>
+      }
       <!-- Input Correo -->
       <div class="flex flex-col text-left">
         <label for="correo" class="text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2 ml-1">
           Correo electrónico
         </label>
         <input formControlName="identificador" placeholder="Tu correo o @usuario" required
-               class="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-orange-500 focus:bg-zinc-950/80 focus:ring-4 focus:ring-orange-500/10 transition-all duration-300" />
-        @if (identificador.errors?.['required']) { Ingresá tu correo o usuario. }
+               class="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-orange-500 focus:bg-zinc-950/80 focus:ring-4 focus:ring-orange-500/10 transition-all duration-300"
+               [ngClass]="identificador.invalid && identificador.touched ? 'border-red-500 focus:border-red-500' : 'border-zinc-800 focus:border-orange-500'"/>
+        <!-- @if (identificador.errors?.['required']) { Ingresá tu correo o usuario. } -->
+         @if (identificador.invalid && (identificador.touched || identificador.dirty)) {
+          <span class="text-xs text-red-400 mt-1.5 ml-1 animate-fadeIn">
+            Ingresá tu correo o usuario.
+          </span>
+        }
       </div>
 
       <!-- Input Contraseña -->
@@ -42,21 +53,32 @@
           Contraseña
         </label>
         <input type="password" formControlName="password" id="password" name="password" placeholder="••••••••" required
-               class="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-orange-500 focus:bg-zinc-950/80 focus:ring-4 focus:ring-orange-500/10 transition-all duration-300" />
-      </div>
+               class="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-orange-500 focus:bg-zinc-950/80 focus:ring-4 focus:ring-orange-500/10 transition-all duration-300"
+               [ngClass]="password.invalid && password.touched ? 'border-red-500 focus:border-red-500' : 'border-zinc-800 focus:border-orange-500'"/>
 
-      <button type="submit"
-              class="w-full bg-gradient-to-r from-orange-600 to-amber-500 text-black font-black uppercase tracking-wider rounded-xl py-3.5 mt-4 shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer">
-        Ingresar
-      </button>
+              @if (password.invalid && (password.touched || password.dirty)) {
+              <div class="flex flex-col mt-1.5 ml-1 text-xs text-red-400 space-y-0.5">
+                @if (password.errors?.['required']) {
+                  <span>La contraseña es obligatoria.</span>
+                }
+                @if (password.errors?.['minlength']) {
+                  <span>Debe tener al menos 8 caracteres.</span>
+                }
+              </div>
+            }
+    </div>
 
-      <!-- Link Registro -->
-      <p class="text-zinc-500 text-sm pt-2">
-        ¿No tenés cuenta?
-        <a routerLink="/registro" class="text-orange-500 font-bold hover:text-orange-400 transition-colors duration-200 underline underline-offset-4 decoration-orange-500/20 hover:decoration-orange-400">
-          Registrate acá
-        </a>
-      </p>
-    </form>
+      <button [disabled]="!form.valid || loading()" type="submit"
+          class="w-full bg-gradient-to-r from-orange-600 to-amber-500 text-black font-black uppercase tracking-wider rounded-xl py-3.5 mt-4 shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed">
+    {{ loading() ? 'Ingresando...' : 'Ingresar' }}
+  </button>
+
+  <p class="text-zinc-500 text-sm pt-2">
+    ¿No tenés cuenta?
+    <a routerLink="/registro" class="text-orange-500 font-bold hover:text-orange-400 transition-colors duration-200 underline underline-offset-4 decoration-orange-500/20 hover:decoration-orange-400">
+      Registrate acá
+    </a>
+  </p>
+</form>
   </div>
 </div>

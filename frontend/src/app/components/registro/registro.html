@@ -24,7 +24,7 @@
 
     @if (errorMsg()) {
       <div class="bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-xl text-left mb-5 animate-fadeIn">
-        ⚠️ {{ errorMsg() }}
+         {{ errorMsg() }}
       </div>
     }
 
@@ -112,6 +112,19 @@
       </div>
 
       <div class="flex flex-col text-left">
+        <label class="text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2 ml-1">Fecha de Nacimiento</label>
+        <input type="date" formControlName="fechaNacimiento"
+       max="2026-12-31"
+       class="w-full bg-zinc-950/50 border rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm focus:outline-none focus:bg-zinc-950/80 focus:ring-4 focus:ring-orange-500/10 transition-all duration-300 [color-scheme:dark]"
+       [ngClass]="fechaNacimiento.invalid && fechaNacimiento.touched ? 'border-red-500 focus:border-red-500' : 'border-zinc-800 focus:border-orange-500'"/>
+        @if (fechaNacimiento.invalid && fechaNacimiento.touched) {
+          <span class="text-xs text-red-400 mt-1.5 ml-1 animate-fadeIn">
+            La fecha de nacimiento es obligatoria.
+          </span>
+        }
+      </div>
+
+      <div class="flex flex-col text-left">
         <label class="text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2 ml-1">Contraseña</label>
         <div class="relative">
           <input [type]="showPwd() ? 'text' : 'password'" formControlName="password" placeholder="••••••••"
@@ -167,6 +180,18 @@
         }
       </div>
 
+      <div class="flex flex-col text-left">
+        <label class="text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2 ml-1">Sobre mí (Descripción)</label>
+        <textarea formControlName="descripcion" rows="3" placeholder="Contanos un poco sobre vos..."
+                  class="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm focus:outline-none focus:bg-zinc-950/80 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all duration-300 resize-none"
+                  [ngClass]="descripcion.invalid && descripcion.touched ? 'border-red-500 focus:border-red-500' : 'border-zinc-800 focus:border-orange-500'"></textarea>
+        @if (descripcion.invalid && descripcion.touched) {
+          <span class="text-xs text-red-400 mt-1.5 ml-1 animate-fadeIn">
+            La descripción no puede superar los 200 caracteres.
+          </span>
+        }
+      </div>
+
       <button [disabled]="!form.valid || loading()" type="submit"
               class="w-full bg-gradient-to-r from-orange-600 to-amber-500 text-black font-black uppercase tracking-wider rounded-xl py-3.5 mt-6 shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed flex items-center justify-center gap-2">
         @if (loading()) {
@@ -190,4 +215,4 @@
     </p>
 
   </div>
-</div> 
+</div>

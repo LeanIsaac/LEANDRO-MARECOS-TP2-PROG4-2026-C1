@@ -30,6 +30,8 @@ export class Registro {
     password: ['', [Validators.required]],
     confirmarPassword: ['', Validators.required],
     avatar: [null as File | null],
+    fechaNacimiento: ['', [Validators.required]],
+    descripcion: ['', [Validators.maxLength(200)]],
   });
 
   /* ── Getters de acceso rápido ── */
@@ -51,6 +53,13 @@ export class Registro {
   get confirmar() {
     return this.form.get('confirmarPassword')!;
   }
+
+  get fechaNacimiento() {
+  return this.form.get('fechaNacimiento')!;
+}
+get descripcion() {
+  return this.form.get('descripcion')!;
+}
 
   /* ── Preview del avatar ── */
   onAvatarChange(event: Event): void {
@@ -82,7 +91,11 @@ async onSubmit(): Promise<void> {
     formData.append('nombreUsuario', this.form.value.usuario!);
     formData.append('password', this.form.value.password!);
     formData.append('repetirPassword', this.form.value.confirmarPassword!);
-    formData.append('fechaNacimiento', '2000-01-01');
+    formData.append('fechaNacimiento', this.form.value.fechaNacimiento!);
+
+    if (this.form.value.descripcion) {
+    formData.append('descripcion', this.form.value.descripcion);
+    }
 
     if (this.form.value.avatar) {
       formData.append('foto', this.form.value.avatar); // El service lo busca como 'foto'

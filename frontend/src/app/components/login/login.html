@@ -1,1 +1,62 @@
-<p>login works!</p>
+<!-- CONTENEDOR PRINCIPAL: Fondo negro oscuro -->
+ <div class="flex justify-center items-center min-h-screen bg-black p-4">
+
+  <!-- Tarjeta de Login -->
+  <div class="bg-zinc-900/60 backdrop-blur-md border border-orange-500/10 p-8 sm:p-10 rounded-3xl shadow-2xl shadow-orange-500/5 w-full max-w-[420px] text-center animate-fadeSlideIn">
+
+    <!-- Contenedor del SVG -->
+    <div class="flex justify-center mb-6">
+      <div class="p-3 bg-zinc-800/50 rounded-full border border-orange-500/20 shadow-inner">
+        <svg width="60" height="60" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="lg2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FF6600"/>
+              <stop offset="100%" stop-color="#FFAA00"/>
+            </linearGradient>
+          </defs>
+          <circle cx="256" cy="256" r="208" fill="none" stroke="url(#lg2)" stroke-width="58"/>
+          <path d="M 172 270 A 88 88 0 0 0 340 270" fill="none" stroke="url(#lg2)" stroke-width="52" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Título con degradado blanco a gris claro -->
+    <h2 class="text-3xl font-extrabold tracking-wide uppercase text-white mb-8 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
+      Iniciar sesión
+    </h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="space-y-5">
+      <!-- Input Correo -->
+      <div class="flex flex-col text-left">
+        <label for="correo" class="text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2 ml-1">
+          Correo electrónico
+        </label>
+        <input formControlName="identificador" placeholder="Tu correo o @usuario" required
+               class="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-orange-500 focus:bg-zinc-950/80 focus:ring-4 focus:ring-orange-500/10 transition-all duration-300" />
+        @if (identificador.errors?.['required']) { Ingresá tu correo o usuario. }
+      </div>
+
+      <!-- Input Contraseña -->
+      <div class="flex flex-col text-left">
+        <label for="password" class="text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2 ml-1">
+          Contraseña
+        </label>
+        <input type="password" formControlName="password" id="password" name="password" placeholder="••••••••" required
+               class="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-orange-500 focus:bg-zinc-950/80 focus:ring-4 focus:ring-orange-500/10 transition-all duration-300" />
+      </div>
+
+      <button type="submit"
+              class="w-full bg-gradient-to-r from-orange-600 to-amber-500 text-black font-black uppercase tracking-wider rounded-xl py-3.5 mt-4 shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer">
+        Ingresar
+      </button>
+
+      <!-- Link Registro -->
+      <p class="text-zinc-500 text-sm pt-2">
+        ¿No tenés cuenta?
+        <a routerLink="/registro" class="text-orange-500 font-bold hover:text-orange-400 transition-colors duration-200 underline underline-offset-4 decoration-orange-500/20 hover:decoration-orange-400">
+          Registrate acá
+        </a>
+      </p>
+    </form>
+  </div>
+</div>

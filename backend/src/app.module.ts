@@ -11,7 +11,9 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     PublicacionesModule,
     AutenticacionModule,
     UsuariosModule,

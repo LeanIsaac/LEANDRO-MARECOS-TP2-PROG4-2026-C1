@@ -1,1 +1,36 @@
-<router-outlet />
+<header class="navbar-header">
+
+  <div class="logo-container">
+    <img src="favicon.ico" alt="Logo" width="32" height="32" class="logo-img">
+    <a class="logo-text" routerLink="">Arrow</a>
+  </div>
+
+  <nav class="nav-menu">
+    <ul class="nav-list">
+      <li>
+        <a routerLink="/login" routerLinkActive="active-link" class="nav-link">
+          Iniciar Sesión
+        </a>
+      </li>
+      <li>
+        <a routerLink="/registro" routerLinkActive="active-link" class="nav-link">
+          Registrarse
+        </a>
+      </li>
+      <li>
+        <a routerLink="/publicaciones" routerLinkActive="active-link" class="nav-link">
+          Publicaciones
+        </a>
+      </li>
+      <li>
+        <a routerLink="/mi-perfil" routerLinkActive="active-link" class="nav-link">
+          Mi Perfil
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<main class="main-content">
+  <router-outlet />
+</main>

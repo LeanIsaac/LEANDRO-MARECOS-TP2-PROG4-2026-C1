@@ -88,20 +88,10 @@ export class AutenticacionService {
       .pipe(tap((res) => this.guardarSesion(res))); // Guarda el token en el localStorage
   }
   // ---- Registro ---
-  registrar(dto: RegisterDto): Observable<UsuarioDto> {
-    const formData = new FormData();
-    formData.append('nombre', dto.nombre);
-    formData.append('apellido', dto.apellido);
-    formData.append('correo', dto.correo);
-    formData.append('nombreUsuario', dto.nombreUsuario);
-    formData.append('password', dto.password);
-    formData.append('repetirPassword', dto.repetirPassword);
-    formData.append('fechaNacimiento', dto.fechaNacimiento);
-    if (dto.descripcion) formData.append('descripcion', dto.descripcion);
-    if (dto.foto) formData.append('foto', dto.foto);
-
-    return this.http.post<UsuarioDto>(`${this.api}/registro`, formData);
-  }
+  registrar(formData: FormData): Observable<UsuarioDto> {
+  // Se envía el formData directo sin desempaquetar nada
+  return this.http.post<UsuarioDto>(`${this.api}/registro`, formData);
+}
 
   logout(): void {
     if (this.isBrowser) {

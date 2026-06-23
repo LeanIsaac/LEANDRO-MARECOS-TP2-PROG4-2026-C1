@@ -40,4 +40,8 @@ export class RegisterDto {
   @IsOptional()
   @IsString()
   descripcion?: string;
+
+  @IsOptional()
+  @IsString()
+  fotoPerfilUrl?: string;
 }

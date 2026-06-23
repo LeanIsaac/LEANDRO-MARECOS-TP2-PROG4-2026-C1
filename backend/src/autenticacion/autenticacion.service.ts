@@ -26,7 +26,10 @@ export class AutenticacionService {
     private jwtService: JwtService,
   ) {}
 
-  async registrar(dto: RegisterDto, foto?: { buffer: Buffer }) {
+  async registrar(
+    dto: RegisterDto,
+    foto?: { buffer: Buffer; originalname?: string },
+  ) {
     // 1. Verificar que las contraseñas coincidan
     if (dto.password !== dto.repetirPassword) {
       throw new BadRequestException('Las contraseñas no coinciden');
@@ -48,10 +51,26 @@ export class AutenticacionService {
 
     // 4. Subir la foto de perfil a Cloudinary (si vino)
     let fotoPerfilUrl: string | undefined;
-    if (foto) {
-      const resultado = await this.cloudinaryService.uploadImage(foto as any);
-      fotoPerfilUrl = resultado.secure_url;
+    if (foto && foto.buffer) {
+      // Aseguramos que el buffer exista
+      try {
+        const resultado = await this.cloudinaryService.uploadImage({
+          buffer: foto.buffer,
+          originalname: foto.originalname,
+        });
+        fotoPerfilUrl = resultado.secure_url;
+      } catch (cloudinaryError) {
+        console.error('Error directo de Cloudinary:', cloudinaryError);
+        throw new BadRequestException(
+          'No se pudo procesar la imagen de perfil',
+        );
+      }
     }
+    // let fotoPerfilUrl: string | undefined;
+    // if (foto) {
+    //   const resultado = await this.cloudinaryService.uploadImage(foto as any);
+    //   fotoPerfilUrl = resultado.secure_url;
+    // }
 
     // 5. Guardar el usuario
     const nuevoUsuario = await this.usuariosService.crear({
@@ -62,7 +81,7 @@ export class AutenticacionService {
       password: passwordEncriptada,
       fechaNacimiento: new Date(dto.fechaNacimiento),
       descripcion: dto.descripcion,
-      fotoPerfilUrl,
+      fotoPerfilUrl: fotoPerfilUrl,
       perfil: PerfilUsuario.USUARIO,
     });
 

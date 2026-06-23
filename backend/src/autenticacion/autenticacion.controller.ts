@@ -22,12 +22,12 @@ export class AutenticacionController {
 
   @Post('registro')
   @HttpCode(HttpStatus.CREATED)
-  @UseInterceptors(FileInterceptor('fotoPerfil'))
+  @UseInterceptors(FileInterceptor('foto'))
   async registro(
     @Body() registerDto: RegisterDto,
-    @UploadedFile() fotoPerfil?: { buffer: Buffer },
+    @UploadedFile() foto?: { buffer: Buffer },
   ) {
-    return this.autenticacionService.registrar(registerDto, fotoPerfil);
+    return this.autenticacionService.registrar(registerDto, foto);
   }
 
   @Post('login')

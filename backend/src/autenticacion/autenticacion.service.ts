@@ -14,7 +14,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { RegisterDto } from './dto/registro.dto';
+import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { PerfilUsuario } from '../usuarios/entities/usuario.schema';
 

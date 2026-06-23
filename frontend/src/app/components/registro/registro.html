@@ -1,1 +1,193 @@
-<p>registro works!</p>
+<div class="flex justify-center items-center min-h-screen bg-black p-4 py-10">
+
+  <div class="bg-zinc-900/60 backdrop-blur-md border border-orange-500/10 p-8 sm:p-10 rounded-3xl shadow-2xl shadow-orange-500/5 w-full max-w-[480px] text-center animate-fadeSlideIn">
+
+    <div class="flex justify-center mb-6 lg:hidden">
+      <div class="p-3 bg-zinc-800/50 rounded-full border border-orange-500/20 shadow-inner">
+        <svg width="55" height="55" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="lg-rm" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FF3300"/>
+              <stop offset="100%" stop-color="#FFAA00"/>
+            </linearGradient>
+          </defs>
+          <circle cx="256" cy="256" r="208" fill="none" stroke="url(#lg-rm)" stroke-width="58"/>
+          <path d="M 172 270 A 88 88 0 0 0 340 270" fill="none" stroke="url(#lg-rm)" stroke-width="52" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <h2 class="text-3xl font-extrabold tracking-wide uppercase text-white mb-1 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
+      Crear cuenta
+    </h2>
+    <p class="text-zinc-500 text-sm mb-6">Completá el formulario para comenzar</p>
+
+    @if (errorMsg()) {
+      <div class="bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-xl text-left mb-5 animate-fadeIn">
+        ⚠️ {{ errorMsg() }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="space-y-4">
+
+      <div class="flex justify-center mb-4">
+        <label class="relative cursor-pointer group">
+          <div class="w-20 h-20 rounded-full border-2 border-dashed overflow-hidden flex items-center justify-center bg-zinc-950/50 transition-all duration-300"
+               [ngClass]="avatarPreview() ? 'border-orange-500' : 'border-zinc-700 group-hover:border-orange-500/70'">
+            @if (avatarPreview()) {
+              <img [src]="avatarPreview()" alt="Avatar preview" class="w-full h-full object-cover"/>
+            } @else {
+              <div class="text-center px-1">
+                <svg class="w-7 h-7 mx-auto mb-0.5 text-zinc-500 group-hover:text-orange-500/70 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <p class="text-zinc-500 text-[10px] group-hover:text-zinc-400 transition-colors">Foto</p>
+              </div>
+            }
+          </div>
+          <div class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center border-2 border-zinc-900 shadow-md">
+            <svg class="w-3 h-3 text-black font-bold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"/>
+            </svg>
+          </div>
+          <input type="file" accept="image/*" class="hidden" (change)="onAvatarChange($event)"/>
+        </label>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col text-left">
+          <label class="text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2 ml-1">Nombre</label>
+          <input type="text" formControlName="nombre" placeholder="Tu nombre"
+                 class="w-full bg-zinc-950/50 border rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm focus:outline-none focus:bg-zinc-950/80 focus:ring-4 focus:ring-orange-500/10 transition-all duration-300"
+                 [ngClass]="nombre.invalid && nombre.touched ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10' : 'border-zinc-800 focus:border-orange-500'"/>
+          @if (nombre.invalid && nombre.touched) {
+            <span class="text-xs text-red-400 mt-1.5 ml-1 animate-fadeIn">
+              @if (nombre.errors?.['required']) { Requerido. }
+              @else if (nombre.errors?.['minlength']) { Mínimo 2 carac. }
+            </span>
+          }
+        </div>
+
+        <div class="flex flex-col text-left">
+          <label class="text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2 ml-1">Apellido</label>
+          <input type="text" formControlName="apellido" placeholder="Tu apellido"
+                class="w-full bg-zinc-950/50 border rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm focus:outline-none focus:bg-zinc-950/80 focus:ring-4 focus:ring-orange-500/10 transition-all duration-300"
+                [ngClass]="apellido.invalid && apellido.touched ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10' : 'border-zinc-800 focus:border-orange-500'"/>
+          @if (apellido.invalid && apellido.touched) {
+            <span class="text-xs text-red-400 mt-1.5 ml-1 animate-fadeIn">
+              @if (apellido.errors?.['required']) { Requerido. }
+              @else if (apellido.errors?.['minlength']) { Mínimo 2 carac. }
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-col text-left">
+        <label class="text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2 ml-1">Usuario</label>
+        <div class="relative">
+          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-600 text-sm select-none pointer-events-none">@</span>
+          <input type="text" formControlName="usuario" placeholder="tu_user"
+                 class="w-full bg-zinc-950/50 border rounded-xl py-3 pr-4 text-white placeholder-zinc-600 text-sm focus:outline-none focus:bg-zinc-950/80 focus:ring-4 focus:ring-orange-500/10 transition-all duration-300"
+                 style="padding-left: 1.75rem;"
+                 [ngClass]="usuario.invalid && usuario.touched ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10' : 'border-zinc-800 focus:border-orange-500'"/>
+        </div>
+        @if (usuario.invalid && usuario.touched) {
+          <span class="text-xs text-red-400 mt-1.5 ml-1 animate-fadeIn">
+            @if (usuario.errors?.['required']) { Requerido. }
+            @else if (usuario.errors?.['minlength']) { Mínimo 3 carac. }
+            @else if (usuario.errors?.['pattern']) { Letras, núm y _ }
+          </span>
+        }
+      </div> <div class="flex flex-col text-left">
+        <label class="text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2 ml-1">Correo electrónico</label>
+        <input type="email" formControlName="email" placeholder="nombre@ejemplo.com"
+               class="w-full bg-zinc-950/50 border rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm focus:outline-none focus:bg-zinc-950/80 focus:ring-4 focus:ring-orange-500/10 transition-all duration-300"
+               [ngClass]="email.invalid && email.touched ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10' : 'border-zinc-800 focus:border-orange-500'"/>
+        @if (email.invalid && email.touched) {
+          <span class="text-xs text-red-400 mt-1.5 ml-1 animate-fadeIn">
+            @if (email.errors?.['required']) { Ingresá tu correo. }
+            @else if (email.errors?.['email']) { Formato inválido. }
+          </span>
+        }
+      </div>
+
+      <div class="flex flex-col text-left">
+        <label class="text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2 ml-1">Contraseña</label>
+        <div class="relative">
+          <input [type]="showPwd() ? 'text' : 'password'" formControlName="password" placeholder="••••••••"
+                 class="w-full bg-zinc-950/50 border rounded-xl px-4 py-3 pr-11 text-white placeholder-zinc-600 text-sm focus:outline-none focus:bg-zinc-950/80 focus:ring-4 focus:ring-orange-500/10 transition-all duration-300"
+                 [ngClass]="password.invalid && password.touched ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10' : 'border-zinc-800 focus:border-orange-500'"/>
+          <button type="button" (click)="showPwd.set(!showPwd())"
+                  class="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors">
+            @if (showPwd()) {
+              <svg class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+              </svg>
+            } @else {
+              <svg class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+            }
+          </button>
+        </div>
+        @if (password.invalid && password.touched) {
+          <span class="text-xs text-red-400 mt-1.5 ml-1 animate-fadeIn">
+            @if (password.errors?.['required']) { Ingresá una contraseña. }
+            @if (password.errors?.['weakPassword']) { Requiere mayúscula, número y símbolo. }
+          </span>
+        }
+      </div>
+
+      <div class="flex flex-col text-left">
+        <label class="text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2 ml-1">Repetir contraseña</label>
+        <div class="relative">
+          <input [type]="showPwdC() ? 'text' : 'password'" formControlName="confirmarPassword" placeholder="••••••••"
+                 class="w-full bg-zinc-950/50 border rounded-xl px-4 py-3 pr-11 text-white placeholder-zinc-600 text-sm focus:outline-none focus:bg-zinc-950/80 focus:ring-4 transition-all duration-300"
+                 [ngClass]="(confirmar.errors?.['required'] || form.errors?.['passwordMismatch']) && confirmar.touched
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10'
+                            : 'border-zinc-800 focus:border-orange-500 focus:ring-orange-500/10'"/>
+          <button type="button" (click)="showPwdC.set(!showPwdC())"
+                  class="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors">
+            @if (showPwdC()) {
+              <svg class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+              </svg>
+            } @else {
+              <svg class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+            }
+          </button>
+        </div>
+        @if (confirmar.touched) {
+          <span class="text-xs text-red-400 mt-1.5 ml-1 animate-fadeIn">
+            @if (confirmar.errors?.['required']) { Repetí tu contraseña. }
+            @else if (form.errors?.['passwordMismatch']) { Las contraseñas no coinciden. }
+          </span>
+        }
+      </div>
+
+      <button [disabled]="!form.valid || loading()" type="submit"
+              class="w-full bg-gradient-to-r from-orange-600 to-amber-500 text-black font-black uppercase tracking-wider rounded-xl py-3.5 mt-6 shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+        @if (loading()) {
+          <svg class="animate-spin w-4 h-4 text-black" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+          </svg>
+          <span>Creando cuenta...</span>
+        } @else {
+          <span>Crear cuenta</span>
+        }
+      </button>
+
+    </form>
+
+    <p class="text-zinc-500 text-sm pt-4">
+      ¿Ya tenés cuenta?
+      <a routerLink="/login" class="text-orange-500 font-bold hover:text-orange-400 transition-colors duration-200 underline underline-offset-4 decoration-orange-500/20 hover:decoration-orange-400">
+        Iniciá sesión
+      </a>
+    </p>
+
+  </div>
+</div> 

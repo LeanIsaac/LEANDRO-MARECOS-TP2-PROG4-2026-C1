@@ -41,7 +41,7 @@ export class Login {
     this.loading.set(true);
     this.errorMsg.set('');
 
-    try {
+    try { 
       const { identificador, password } = this.form.value;
       await firstValueFrom(
         this.authService.login({

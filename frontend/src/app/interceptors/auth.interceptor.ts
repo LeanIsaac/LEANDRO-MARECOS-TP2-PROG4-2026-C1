@@ -1,17 +1,29 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { AutenticacionService } from '../services/autenticacion.service';
+import { inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = inject(AutenticacionService).token;
+  const platformId = inject(PLATFORM_ID);
 
-  // Si no hay token (usuario no logueado), la request pasa sin modificar
-  if (!token) return next(req);
+  // Si la petición se ejecuta en el Servidor (SSR), pasa de largo sin tocar el LocalStorage
+  if (!isPlatformBrowser(platformId)) {
+    return next(req);
+  }
 
-  // Clonamos la request y agregamos el header
-  const authReq = req.clone({
-    setHeaders: { Authorization: `Bearer ${token}` },
-  });
+  // Si ya estamos en el Navegador, leemos directamente la KEY exacta de tu AutenticacionService
+  const token = localStorage.getItem('ello_jwt');
 
-  return next(authReq);
+  // Log temporal en consola para que veas en vivo si el token se inyecta o no
+  console.log(`[Interceptor Cliente] URL: ${req.url} | Token Encontrado: ${!!token}`);
+
+  // Si hay token, clonamos la petición e inyectamos la cabecera reglamentaria
+  if (token) {
+    req = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+
+  return next(req);
 };

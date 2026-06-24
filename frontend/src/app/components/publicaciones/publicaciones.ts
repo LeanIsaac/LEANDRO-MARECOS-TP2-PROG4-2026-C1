@@ -238,4 +238,38 @@ export class Publicaciones implements OnInit {
     const payload = JSON.parse(atob(token.split('.')[1]));
     return likesArray.includes(payload.sub);
   }
+
+  // ── 6. CONTROL DE PAGINACIÓN (AVANZAR Y RETROCEDER) ──
+  paginaSiguiente(): void {
+    // Sumamos el límite actual al offset para avanzar a los próximos 5 posts
+    this.offset.update(current => current + this.limit());
+    this.cargarPublicaciones();
+    this.scrollHaciaArriba();
+  }
+
+  paginaAnterior(): void {
+    // Restamos el límite al offset para volver atrás
+    if (this.offset() > 0) {
+      this.offset.update(current => current - this.limit());
+      this.cargarPublicaciones();
+      this.scrollHaciaArriba();
+    }
+  }
+
+  // Getters auxiliares para manejar los deshabilitados en los botones
+  get puedeRetroceder(): boolean {
+    return this.offset() > 0;
+  }
+
+  get puedeAvanzar(): boolean {
+    // significa que ya llegamos al final de la base de datos y no hay más hojas.
+    return this.publicaciones().length === this.limit();
+  }
+
+  // Helper estético para mejorar la UX al cambiar de página
+  private scrollHaciaArriba(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
 }

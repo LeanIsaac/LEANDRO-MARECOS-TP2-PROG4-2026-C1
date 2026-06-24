@@ -135,5 +135,33 @@
       }
     </div>
 
+    <div class="flex items-center justify-between pt-4 pb-6 border-t border-zinc-900 px-1">
+
+      <!-- Botón Anterior -->
+      <button (click)="paginaAnterior()"
+              [disabled]="!puedeRetroceder"
+              class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider bg-zinc-900 border border-zinc-800 text-zinc-300 px-4 py-2.5 rounded-xl hover:bg-zinc-800/60 active:scale-95 disabled:opacity-30 disabled:scale-100 disabled:cursor-not-allowed transition-all cursor-pointer">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        <span>Anterior</span>
+      </button>
+
+      <div class="bg-zinc-950 px-4 py-2 rounded-xl border border-zinc-900 text-xs font-mono text-zinc-500">
+        Pág. <span class="text-orange-500 font-bold">{{ (offset() / limit()) + 1 }}</span>
+      </div>
+
+      <!-- Botón Siguiente -->
+      <button (click)="paginaSiguiente()"
+              [disabled]="!puedeAvanzar"
+              class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider bg-zinc-900 border border-zinc-800 text-zinc-300 px-4 py-2.5 rounded-xl hover:bg-zinc-800/60 active:scale-95 disabled:opacity-30 disabled:scale-100 disabled:cursor-not-allowed transition-all cursor-pointer">
+        <span>Siguiente</span>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+
+    </div>
+
   </div>
 </div>

@@ -69,4 +69,22 @@ export class PublicacionesController {
 
     return this.publicacionesService.bajaLogica(id, usuarioId, rolUsuario);
   }
+
+  // ── 4. DAR ME GUSTA A UNA PUBLICACIÓN ──
+  @Post(':id/like')
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async darLike(@Param('id') publicacionId: string, @Req() req: any) {
+    const usuarioId = req.user.sub; // ID extraído de forma segura del JWT
+    return this.publicacionesService.darMeGusta(publicacionId, usuarioId);
+  }
+
+  // ── 5. QUITAR ME GUSTA DE UNA PUBLICACIÓN ──
+  @Delete(':id/like')
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async quitarLike(@Param('id') publicacionId: string, @Req() req: any) {
+    const usuarioId = req.user.sub;
+    return this.publicacionesService.quitarMeGusta(publicacionId, usuarioId);
+  }
 }

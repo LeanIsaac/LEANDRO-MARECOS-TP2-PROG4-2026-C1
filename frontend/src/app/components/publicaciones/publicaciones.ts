@@ -150,4 +150,54 @@ export class Publicaciones implements OnInit {
       console.error('Error al eliminar:', err);
     }
   }
+
+  // ── 5. SWITCH DINÁMICO DE ME GUSTA ──
+  async toggleLike(post: any): Promise<void> {
+    // 💡 Paso Clave: Extraemos el ID del usuario actual de manera segura desde el token guardado
+    const token = localStorage.getItem('ello_jwt');
+    if (!token) return;
+
+    // Decodificamos la sección media (payload) del JWT para saber quiénes somos en tiempo real
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const miUsuarioId = payload.sub;
+
+    // Evaluamos el estado: si mi ID ya está en la lista de likes del post, lo saco
+    const yaLeDiLike = post.likes.includes(miUsuarioId);
+    const url = `${this.apiUrl}/${post._id}/like`;
+
+    try {
+      if (yaLeDiLike) {
+        // Enviar petición DELETE al backend para quitar el like
+        await firstValueFrom(this.http.delete(url));
+
+        // Actualizamos de manera reactiva el Signal local para no recargar toda la API
+        this.publicaciones.update(posts =>
+          posts.map(p => p._id === post._id
+            ? { ...p, likes: p.likes.filter(id => id !== miUsuarioId) }
+            : p
+          )
+        );
+      } else {
+        // Enviar petición POST al backend para dar el like
+        await firstValueFrom(this.http.post(url, {}));
+
+        // Sumamos nuestro ID al array local instantáneamente
+        this.publicaciones.update(posts =>
+          posts.map(p => p._id === post._id
+            ? { ...p, likes: [...p.likes, miUsuarioId] }
+            : p
+          )
+        );
+      }
+    } catch (err) {
+      console.error('Error al procesar el Me gusta:', err);
+    }
+  }
+
+  usuarioYaDioLike(likesArray: string[]): boolean {
+    const token = localStorage.getItem('ello_jwt');
+    if (!token) return false;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return likesArray.includes(payload.sub);
+  }
 }

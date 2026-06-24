@@ -112,4 +112,67 @@ export class PublicacionesService {
 
     return { message: 'Publicación dada de baja correctamente.' };
   }
+
+  // LOGICA: DAR ME GUSTA
+  async darMeGusta(publicacionId: string, usuarioId: string) {
+    // 1. Buscamos la publicación activa
+    const publicacion = await this.publicacionModel.findOne({
+      _id: publicacionId,
+      habilitada: true,
+    });
+    if (!publicacion) {
+      throw new NotFoundException(
+        'La publicación no existe o fue dada de baja.',
+      );
+    }
+
+    // 2. Verificamos si el usuario ya le dio like previamente
+    const yaTieneLike = publicacion.likes.some(
+      (id) => id.toString() === usuarioId,
+    );
+    if (yaTieneLike) {
+      throw new BadRequestException('Ya le diste me gusta a esta publicación.');
+    }
+
+    // 3. Agregamos el ID del usuario al array de likes de forma segura
+    publicacion.likes.push(new Types.ObjectId(usuarioId));
+    await publicacion.save();
+
+    return {
+      message: 'Me gusta agregado correctamente.',
+      totalLikes: publicacion.likes.length,
+    };
+  }
+
+  // LOGICA: QUITAR ME GUSTA
+  async quitarMeGusta(publicacionId: string, usuarioId: string) {
+    const publicacion = await this.publicacionModel.findOne({
+      _id: publicacionId,
+      habilitada: true,
+    });
+    if (!publicacion) {
+      throw new NotFoundException('La publicación no existe.');
+    }
+
+    // 1. Validamos que el usuario realmente haya dado un like antes para poder quitarlo
+    const yaTieneLike = publicacion.likes.some(
+      (id) => id.toString() === usuarioId,
+    );
+    if (!yaTieneLike) {
+      throw new BadRequestException(
+        'No podés quitar un me gusta que no realizaste previamente.',
+      );
+    }
+
+    // 2. Filtramos el array para remover el ID del usuario actual
+    publicacion.likes = publicacion.likes.filter(
+      (id) => id.toString() !== usuarioId,
+    );
+    await publicacion.save();
+
+    return {
+      message: 'Me gusta eliminado correctamente.',
+      totalLikes: publicacion.likes.length,
+    };
+  }
 }

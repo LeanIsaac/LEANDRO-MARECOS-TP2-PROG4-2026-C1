@@ -105,8 +105,13 @@
           </div>
 
           <div class="flex items-center gap-6 mt-4 pt-3 border-t border-zinc-800/40 text-xs font-semibold text-zinc-500">
-            <button class="flex items-center gap-1.5 hover:text-orange-500 group transition-colors">
-              <svg class="w-4 h-4 text-zinc-500 group-hover:text-orange-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <button (click)="toggleLike(post)"
+                    [ngClass]="usuarioYaDioLike(post.likes) ? 'text-orange-500' : 'text-zinc-500 hover:text-orange-500'"
+                    class="flex items-center gap-1.5 group transition-colors cursor-pointer font-bold">
+
+              <svg class="w-4 h-4 transition-transform duration-200 group-active:scale-125"
+                   [attr.fill]="usuarioYaDioLike(post.likes) ? 'currentColor' : 'none'"
+                   viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
               </svg>
               <span>{{ post.likes.length }} Me gusta</span>

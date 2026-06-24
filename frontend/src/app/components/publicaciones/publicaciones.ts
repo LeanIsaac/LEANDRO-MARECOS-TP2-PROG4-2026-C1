@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit, PLATFORM_ID} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -26,7 +26,7 @@ interface Publicacion {
 @Component({
   selector: 'app-publicaciones',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe],
   templateUrl: './publicaciones.html', // Vinculado a tu publicaciones.html
 })
 export class Publicaciones implements OnInit {
@@ -47,7 +47,7 @@ export class Publicaciones implements OnInit {
   limit = signal(5);
   offset = signal(0);
 
-  // Manejo de archivos para la imagen opcional del post [cite: 22]
+  // Manejo de archivos para la imagen opcional del post
   imagenSeleccionada: File | null = null;
   imagenPreview = signal<string | null>(null);
 
@@ -166,7 +166,7 @@ export class Publicaciones implements OnInit {
       // Mostramos un mensaje flotante (Toast) de éxito que se cierra solo en 2 segundos
       Swal.fire({
         title: '¡Eliminado!',
-        text: 'La publicación fue dada de baja con éxito.',
+        text: 'La publicación fue eliminada con éxito.',
         icon: 'success',
         timer: 2000,
         showConfirmButton: false,
@@ -180,7 +180,7 @@ export class Publicaciones implements OnInit {
       // Alerta estética en caso de error de red o permisos
       Swal.fire({
         title: 'Error',
-        text: 'No tenés permisos para eliminar esta publicación o expiró tu sesión.',
+        text: 'No tenés permisos para eliminar esta publicación.',
         icon: 'error',
         background: '#18181b',
         color: '#ffffff',

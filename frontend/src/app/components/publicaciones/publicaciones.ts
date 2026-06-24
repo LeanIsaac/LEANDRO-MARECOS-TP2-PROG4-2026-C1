@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import Swal from 'sweetalert2';
 
 // Definimos una interfaz limpia para tipar las publicaciones en base a tu backend
 interface Publicacion {
@@ -138,16 +139,53 @@ export class Publicaciones implements OnInit {
 
   // ── 4. BAJA LÓGICA DE PUBLICACIÓN ──
   async eliminarPost(id: string): Promise<void> {
-    // Usamos un modal o confirmación nativa del navegador para cuidar la UX
-    const confirmar = confirm('¿Estás seguro de que querés dar de baja esta publicación?');
-    if (!confirmar) return;
 
+    const resultado = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta publicación se dará de baja y dejará de ser visible en el feed.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ea580c', // Color naranja de tu paleta Tailwind (orange-600)
+      cancelButtonColor: '#27272a',  // Color zinc oscuro para el cancelar (zinc-800)
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      background: '#18181b',         // Fondo oscuro a tono con tu Premium Dark (zinc-900)
+      color: '#ffffff'               // Texto blanco
+    });
+
+    // Si el usuario tocó "Cancelar", cortamos la ejecución acá
+    if (!resultado.isConfirmed) return;
+
+    // Si confirmó, ejecutamos la baja lógica hacia el backend de Render
     try {
       await firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
-      // Filtramos la publicación borrada localmente para no tener que recargar toda la API
+
+      // Filtramos la publicación borrada localmente de forma reactiva
       this.publicaciones.update(posts => posts.filter(p => p._id !== id));
+
+      // Mostramos un mensaje flotante (Toast) de éxito que se cierra solo en 2 segundos
+      Swal.fire({
+        title: '¡Eliminado!',
+        text: 'La publicación fue dada de baja con éxito.',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false,
+        background: '#18181b',
+        color: '#ffffff'
+      });
+
     } catch (err) {
       console.error('Error al eliminar:', err);
+
+      // Alerta estética en caso de error de red o permisos
+      Swal.fire({
+        title: 'Error',
+        text: 'No tenés permisos para eliminar esta publicación o expiró tu sesión.',
+        icon: 'error',
+        background: '#18181b',
+        color: '#ffffff',
+        confirmButtonColor: '#ea580c'
+      });
     }
   }
 

@@ -7,16 +7,7 @@
 
   <nav class="nav-menu">
     <ul class="nav-list">
-      <li>
-        <a routerLink="/login" routerLinkActive="active-link" class="nav-link">
-          Iniciar Sesión
-        </a>
-      </li>
-      <li>
-        <a routerLink="/registro" routerLinkActive="active-link" class="nav-link">
-          Registrarse
-        </a>
-      </li>
+
       <li>
         <a routerLink="/publicaciones" routerLinkActive="active-link" class="nav-link">
           Publicaciones
@@ -27,6 +18,25 @@
           Mi Perfil
         </a>
       </li>
+
+      @if (!this.authService.usuarioActual()) {
+        <li>
+          <a routerLink="/registro" routerLinkActive="active-link" class="nav-link">
+            Registrarse
+          </a>
+        </li>
+        <li>
+          <a routerLink="/login" routerLinkActive="active-link" class="nav-link">
+            Iniciar Sesión
+          </a>
+        </li>
+
+      }
+      @else {
+        <li>
+          <a routerLinkActive="active-link" class="nav-link" (click)="this.authService.logout()">Cerrar sesión</a>
+        </li>
+      }
     </ul>
   </nav>
 </header>

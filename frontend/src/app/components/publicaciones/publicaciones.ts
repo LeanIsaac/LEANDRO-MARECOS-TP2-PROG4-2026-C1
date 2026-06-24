@@ -149,8 +149,8 @@ export class Publicaciones implements OnInit {
       cancelButtonColor: '#27272a',  // Color zinc oscuro para el cancelar (zinc-800)
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
-      background: '#18181b',         // Fondo oscuro a tono con tu Premium Dark (zinc-900)
-      color: '#ffffff'               // Texto blanco
+      background: '#18181b', // Fondo oscuro a tono con tu Premium Dark (zinc-900)
+      color: '#ffffff' // Texto blanco
     });
 
     // Si el usuario tocó "Cancelar", cortamos la ejecución acá
@@ -191,7 +191,7 @@ export class Publicaciones implements OnInit {
 
   // ── 5. SWITCH DINÁMICO DE ME GUSTA ──
   async toggleLike(post: any): Promise<void> {
-    // 💡 Paso Clave: Extraemos el ID del usuario actual de manera segura desde el token guardado
+    // xtraemos el ID del usuario actual de manera segura desde el token guardado
     const token = localStorage.getItem('ello_jwt');
     if (!token) return;
 

@@ -60,27 +60,62 @@ export class PublicacionesService {
     limit: number = 10,
     offset: number = 0,
   ) {
-    // Objeto de condiciones base: Solo traemos las que pasaron por alta (habilitada: true)
-    const query: any = { habilitada: true };
 
-    // Si el front nos pide filtrar por un usuario específico (por ejemplo, en "Mi Perfil")
+    const matchStage: any = { habilitada: true };
+
+    // Si viene el query param 'usuarioId', filtramos solo las publicaciones de ese autor
     if (usuarioIdFiltrar) {
-      query.usuarioId = new Types.ObjectId(usuarioIdFiltrar);
+      matchStage.usuarioId = new Types.ObjectId(usuarioIdFiltrar);
     }
 
-    // Definimos el criterio de ordenamiento dinámico
-    let sortCriteria: any = { createdAt: -1 }; // Por defecto: fecha descendente
+    // Criterio de ordenamiento dinámico
+    let sortStage: any = { createdAt: -1 }; // Por defecto: Más recientes primero
     if (orden === 'likes') {
-      // Ordena de manera descendente según el tamaño (cantidad de elementos) del array de likes
-      sortCriteria = { likes: -1 };
+      sortStage = { cantidadLikes: -1 }; // Por popularidad
     }
 
     return this.publicacionModel
-      .find(query)
-      .populate('usuarioId', 'nombre apellido nombreUsuario fotoPerfilUrl') // Trae los datos del creador
-      .sort(sortCriteria)
-      .skip(offset) // Desplazamiento (Paginación)
-      .limit(limit) // Cantidad de registros (Paginación)
+      .aggregate([
+        // Filtrado
+        { $match: matchStage },
+
+        {
+          $addFields: {
+            cantidadLikes: { $size: '$likes' },
+          },
+        },
+        // 3. Ordenamiento
+        { $sort: sortStage },
+
+        { $skip: offset },
+        { $limit: limit },
+        // Cruzamos con la colección de usuarios para el creador del post
+        {
+          $lookup: {
+            from: 'usuarios',
+            localField: 'usuarioId',
+            foreignField: '_id',
+            as: 'usuarioId',
+          },
+        },
+        { $unwind: '$usuarioId' },
+        // Limpieza y protección de campos
+        {
+          $project: {
+            _id: 1,
+            titulo: 1,
+            descripcion: 1,
+            fotoUrl: 1,
+            likes: 1,
+            createdAt: 1,
+            'usuarioId._id': 1,
+            'usuarioId.nombre': 1,
+            'usuarioId.apellido': 1,
+            'usuarioId.nombreUsuario': 1,
+            'usuarioId.fotoPerfilUrl': 1,
+          },
+        },
+      ])
       .exec();
   }
 
@@ -154,7 +189,7 @@ export class PublicacionesService {
       throw new NotFoundException('La publicación no existe.');
     }
 
-    // 1. Validamos que el usuario realmente haya dado un like antes para poder quitarlo
+    // Validamos que el usuario realmente haya dado un like antes para poder quitarlo
     const yaTieneLike = publicacion.likes.some(
       (id) => id.toString() === usuarioId,
     );
@@ -164,7 +199,7 @@ export class PublicacionesService {
       );
     }
 
-    // 2. Filtramos el array para remover el ID del usuario actual
+    // Filtramos el array para remover el ID del usuario actual
     publicacion.likes = publicacion.likes.filter(
       (id) => id.toString() !== usuarioId,
     );

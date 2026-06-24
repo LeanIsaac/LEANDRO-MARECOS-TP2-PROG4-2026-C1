@@ -109,6 +109,7 @@ export class AutenticacionService {
       correo: usuario.correo,
       nombreUsuario: usuario.nombreUsuario,
       perfil: usuario.perfil,
+      fotoPerfilUrl: usuario.fotoPerfilUrl,
     };
     const token = this.jwtService.sign(payload);
 

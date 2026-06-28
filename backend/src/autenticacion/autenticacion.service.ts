@@ -126,4 +126,22 @@ export class AutenticacionService {
       : usuario;
     return resto;
   }
+
+  async refrescarToken(payloadActual: any) {
+    // Estructura el nuevo payload clonando los datos esenciales del usuario
+    const nuevoPayload = {
+      sub: payloadActual.sub,
+      correo: payloadActual.correo,
+      nombreUsuario: payloadActual.nombreUsuario,
+      perfil: payloadActual.perfil,
+      fotoPerfilUrl: payloadActual.fotoPerfilUrl,
+    };
+
+    // Genera un JWT fresco que resetea el tiempo de expiración de 15 minutos
+    const nuevoToken = this.jwtService.sign(nuevoPayload);
+
+    return {
+      token: nuevoToken,
+    };
+  }
 }

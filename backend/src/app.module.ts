@@ -8,6 +8,7 @@ import { AutenticacionModule } from './autenticacion/autenticacion.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
+import { ComentariosModule } from './comentarios/comentarios.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
     AutenticacionModule,
     UsuariosModule,
     MongooseModule.forRoot(process.env.MONGO_URI!),
+    ComentariosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

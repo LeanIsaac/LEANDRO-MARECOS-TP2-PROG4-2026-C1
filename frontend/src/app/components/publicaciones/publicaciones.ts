@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import Swal from 'sweetalert2';
+import { RouterLink } from "@angular/router";
 
 // Definimos una interfaz limpia para tipar las publicaciones en base a tu backend
 interface Publicacion {
@@ -26,7 +27,7 @@ interface Publicacion {
 @Component({
   selector: 'app-publicaciones',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePipe],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe, RouterLink],
   templateUrl: './publicaciones.html', // Vinculado a tu publicaciones.html
 })
 export class Publicaciones implements OnInit {

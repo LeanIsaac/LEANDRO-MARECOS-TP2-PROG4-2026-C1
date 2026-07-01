@@ -33,6 +33,14 @@
 
       }
       @else {
+
+        @if(this.authService.isPremium()) {
+          <li>
+            <a routerLink="/dashboard/usuarios" routerLinkActive="active-link" class="nav-link">
+              Administración
+            </a>
+          </li>
+        }
         <li>
           <a routerLinkActive="active-link" class="nav-link" (click)="this.authService.logout()">Cerrar sesión</a>
         </li>

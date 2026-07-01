@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -66,11 +67,6 @@ export class AutenticacionService {
         );
       }
     }
-    // let fotoPerfilUrl: string | undefined;
-    // if (foto) {
-    //   const resultado = await this.cloudinaryService.uploadImage(foto as any);
-    //   fotoPerfilUrl = resultado.secure_url;
-    // }
 
     // 5. Guardar el usuario
     const nuevoUsuario = await this.usuariosService.crear({
@@ -101,6 +97,12 @@ export class AutenticacionService {
     const passwordValida = await bcrypt.compare(dto.password, usuario.password);
     if (!passwordValida) {
       throw new UnauthorizedException('Credenciales inválidas');
+    }
+
+    if (!usuario.habilitado) {
+      throw new UnauthorizedException(
+        'Tu cuenta se encuentra suspendida. Ponete en contacto con el administrador.',
+      );
     }
 
     // 3. Generar el token

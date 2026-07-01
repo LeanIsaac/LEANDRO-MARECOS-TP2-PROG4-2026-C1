@@ -7,6 +7,10 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import Swal from 'sweetalert2';
 import { RouterLink } from "@angular/router";
+import { FiltoCensuraPipe } from '../../pipes/filto-censura-pipe';
+import { AbreviarNumeroPipe } from '../../pipes/abreviar-numero-pipe';
+
+
 
 // Definimos una interfaz limpia para tipar las publicaciones en base a tu backend
 interface Publicacion {
@@ -27,7 +31,7 @@ interface Publicacion {
 @Component({
   selector: 'app-publicaciones',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePipe, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe, RouterLink, FiltoCensuraPipe, AbreviarNumeroPipe],
   templateUrl: './publicaciones.html', // Vinculado a tu publicaciones.html
 })
 export class Publicaciones implements OnInit {

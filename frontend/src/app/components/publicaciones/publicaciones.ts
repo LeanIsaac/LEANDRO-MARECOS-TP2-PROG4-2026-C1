@@ -9,6 +9,9 @@ import Swal from 'sweetalert2';
 import { RouterLink } from "@angular/router";
 import { FiltoCensuraPipe } from '../../pipes/filto-censura-pipe';
 import { AbreviarNumeroPipe } from '../../pipes/abreviar-numero-pipe';
+import { AppSoloAdminDirective } from '../../directives/app-solo-admin.directive';
+import { AppDeshabilitarVacioDirective } from "../../directives/app-deshabilitar-vacio.directive";
+import { AppMayusculasDirective } from "../../directives/app-mayusculas.directive";
 
 
 
@@ -31,7 +34,7 @@ interface Publicacion {
 @Component({
   selector: 'app-publicaciones',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DatePipe, RouterLink, FiltoCensuraPipe, AbreviarNumeroPipe],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe, RouterLink, FiltoCensuraPipe, AbreviarNumeroPipe, AppSoloAdminDirective, AppDeshabilitarVacioDirective, AppMayusculasDirective],
   templateUrl: './publicaciones.html', // Vinculado a tu publicaciones.html
 })
 export class Publicaciones implements OnInit {

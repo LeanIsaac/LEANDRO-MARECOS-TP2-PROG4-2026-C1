@@ -33,7 +33,7 @@ export interface UsuarioDto {
   apellido: string;
   correo: string;
   nombreUsuario: string;
-  perfil: 'usuario' | 'admin';
+  perfil: 'usuario' | 'administrador';
   fotoPerfilUrl?: string;
   descripcion?: string;
   fechaNacimiento?: string;
@@ -220,5 +220,10 @@ export class AutenticacionService {
     if (!this.isBrowser) return null;
     const raw = localStorage.getItem(USUARIO_KEY);
     return raw ? (JSON.parse(raw) as UsuarioDto) : null;
+  }
+
+  isPremium(): boolean {
+    const usuario = this.usuarioActual();
+    return usuario?.perfil === 'administrador';
   }
 }

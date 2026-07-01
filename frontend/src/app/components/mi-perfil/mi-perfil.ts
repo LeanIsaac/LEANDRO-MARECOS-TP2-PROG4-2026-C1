@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import Swal from 'sweetalert2';
+import { FormatoRolPipe } from '../../pipes/formato-rol-pipe';
+import { AppBordeHoverDirective } from '../../directives/appborde-hover.directive';
 
 interface Publicacion {
   _id: string;
@@ -24,7 +26,7 @@ interface Publicacion {
 @Component({
   selector: 'app-mi-perfil',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormatoRolPipe, AppBordeHoverDirective],
   templateUrl: './mi-perfil.html',
   styleUrls: ['./mi-perfil.css'],
 })

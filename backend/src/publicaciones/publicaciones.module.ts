@@ -1,22 +1,22 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PublicacionesService } from './publicaciones.service';
 import { PublicacionesController } from './publicaciones.controller';
+import { PublicacionesService } from './publicaciones.service';
+import { AutenticacionModule } from '../autenticacion/autenticacion.module';
 import { Publicacion, PublicacionSchema } from './entities/publicacion.schema';
-import { CloudinaryModule } from '../cloudinary/cloudinary.module'; // Lo importamos para poder subir fotos de posts
-import { AutenticacionModule } from 'src/autenticacion/autenticacion.module';
+
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
   imports: [
-    // Registramos el modelo en Mongoose
     MongooseModule.forFeature([
       { name: Publicacion.name, schema: PublicacionSchema },
     ]),
+    forwardRef(() => AutenticacionModule),
     CloudinaryModule,
-    AutenticacionModule,
   ],
   controllers: [PublicacionesController],
   providers: [PublicacionesService],
-  exports: [PublicacionesService], // Por si otro módulo necesita leer publicaciones
+  exports: [PublicacionesService],
 })
 export class PublicacionesModule {}

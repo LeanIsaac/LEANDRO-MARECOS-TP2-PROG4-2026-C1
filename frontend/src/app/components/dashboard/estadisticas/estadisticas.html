@@ -1,1 +1,65 @@
-<p>estadisticas works!</p>
+<div class="min-h-screen bg-black text-white p-4 sm:p-8">
+  <div class="max-w-6xl mx-auto space-y-8">
+
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-zinc-800 pb-5 gap-4">
+      <div>
+        <h1 class="text-2xl font-black uppercase tracking-wider text-white">Panel de Control General</h1>
+        <p class="text-xs text-zinc-500 font-mono">Métricas Analíticas y Auditoría Temporal</p>
+      </div>
+      <div class="flex gap-2">
+        <a routerLink="/dashboard/usuarios" class="bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-wider px-4 py-2.5 rounded-xl transition-all">
+          Gestión Usuarios
+        </a>
+        <a routerLink="/dashboard/estadisticas" class="bg-orange-600 text-black text-xs font-black uppercase tracking-wider px-4 py-2.5 rounded-xl transition-all">
+          Métricas e Informes
+        </a>
+        <a routerLink="/publicaciones" class="bg-zinc-950 text-zinc-500 hover:text-zinc-300 text-xs font-bold uppercase tracking-wider px-3 py-2.5 rounded-xl transition-all">
+          Salir
+        </a>
+      </div>
+    </div>
+
+    <div class="bg-zinc-900/30 border border-zinc-800/80 p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4 text-left">
+      <div class="flex items-center gap-4 flex-wrap">
+        <div class="space-y-1">
+          <label class="text-[10px] font-black uppercase tracking-wider text-zinc-500 block">Fecha Desde</label>
+          <input type="date" [(ngModel)]="fechaInicio" class="bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-zinc-300 focus:outline-none focus:border-orange-500" max="2026-12-31"/>
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] font-black uppercase tracking-wider text-zinc-500 block">Fecha Hasta</label>
+          <input type="date" [(ngModel)]="fechaFin" class="bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-zinc-300 focus:outline-none focus:border-orange-500" max="2026-12-31"/>
+        </div>
+      </div>
+      <button (click)="consultarMetricas()" [disabled]="loading()"
+              class="bg-zinc-100 hover:bg-white text-black text-xs font-black uppercase tracking-wider px-5 py-2.5 rounded-xl transition-all cursor-pointer disabled:opacity-40">
+        {{ loading() ? 'Procesando...' : 'Filtrar Rango' }}
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+
+      <div class="bg-zinc-900/20 border border-zinc-900 rounded-2xl p-5 flex flex-col justify-between shadow-xl space-y-4">
+        <div class="text-left"><h3 class="text-xs font-black uppercase tracking-widest text-orange-500">Publicaciones Realizadas</h3><p class="text-[10px] text-zinc-500">Volumen total emitido por cada perfil único.</p></div>
+        <div class="relative flex-1 flex items-center justify-center min-h-[220px]">
+          <canvas #chartBars></canvas>
+        </div>
+      </div>
+
+      <div class="bg-zinc-900/20 border border-zinc-900 rounded-2xl p-5 flex flex-col justify-between shadow-xl space-y-4">
+        <div class="text-left"><h3 class="text-xs font-black uppercase tracking-widest text-orange-500">Actividad de Comentarios</h3><p class="text-[10px] text-zinc-500">Evolución e interacciones acumuladas por día.</p></div>
+        <div class="relative flex-1 flex items-center justify-center min-h-[220px]">
+          <canvas #chartLines></canvas>
+        </div>
+      </div>
+
+      <div class="bg-zinc-900/20 border border-zinc-900 rounded-2xl p-5 flex flex-col justify-between shadow-xl space-y-4 md:col-span-2 lg:col-span-1">
+        <div class="text-left"><h3 class="text-xs font-black uppercase tracking-widest text-orange-500">Impacto por Publicación</h3><p class="text-[10px] text-zinc-500">Distribución porcentual de comentarios recibidos.</p></div>
+        <div class="relative flex-1 flex items-center justify-center max-h-[220px] p-2">
+          <canvas #chartPie></canvas>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
